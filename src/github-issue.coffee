@@ -19,6 +19,7 @@ lib = require '../lib'
 
 PATH = "/hubot/github-issue"
 
+base_room_name = try require process.env.BASE_ROOM_NAME
 
 module.exports = (robot) ->
   robot.router.post PATH, (req, res) ->
@@ -27,7 +28,14 @@ module.exports = (robot) ->
       only_mentioned: query["only-mentioned"]
     parts = parseBody req.body
     message = lib.buildMessage parts, opts
-    robot.send {room: query.room}, message if message
+    return res.end "" unless message
+
+    mentions = lib.extractMentions req.body.issue.body
+    for mention in mentions
+      break unless base_room_name
+      room_name = base_room_name + mention.substring(1, mention.length)
+      robot.send {room: room_name}, message
+    robot.send {room: query.room}, message
     res.end ""
 
 parseBody = (data) ->
