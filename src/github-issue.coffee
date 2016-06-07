@@ -19,7 +19,7 @@ lib = require '../lib'
 
 PATH = "/hubot/github-issue"
 
-base_room_name = try require process.env.BASE_ROOM_NAME
+base_room_name = process.env.BASE_ROOM_NAME
 
 module.exports = (robot) ->
   robot.router.post PATH, (req, res) ->
