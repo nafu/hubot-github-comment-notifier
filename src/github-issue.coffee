@@ -30,13 +30,26 @@ module.exports = (robot) ->
     message = lib.buildMessage parts, opts
     return res.end "" unless message
 
-    mentions = lib.extractMentions req.body.issue.body
+    mentions = extractMentionsFromBody req.body
     for mention in mentions
       break unless base_room_name
       room_name = base_room_name + mention.substring(1, mention.length)
       robot.send {room: room_name}, message
     robot.send {room: query.room}, message
     res.end ""
+
+extractMentionsFromBody = (data) ->
+  mentions = null
+  # when issue is opened
+  if ['opened', 'reopened'].indexOf(data.action) > -1 and data.issue
+    mentions = lib.extractMentions data.issue.body
+  # when issue is closed
+  else if data.action is 'closed' and data.issue
+    mentions = lib.extractMentions data.issue.body
+  # comments on issues and those on pull requests are same except the latter has data.issue.pull_request
+  else if data.action is 'created' and data.issue and not data.issue.pull_request
+    mentions = lib.extractMentions data.comment.body
+  mentions
 
 parseBody = (data) ->
   parts = null
