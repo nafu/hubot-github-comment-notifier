@@ -34,9 +34,7 @@ module.exports = (robot) ->
     for mention in mentions
       break unless base_room_name
       room_name = base_room_name + mention.substring(1, mention.length)
-      try {
-        robot.send {room: room_name}, message
-      }
+      try robot.send {room: room_name}, message
     robot.send {room: query.room}, message
     res.end ""
 
