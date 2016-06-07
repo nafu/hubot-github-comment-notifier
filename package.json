@@ -1,8 +1,8 @@
 {
-  "name": "hubot-github-comment-notifier",
-  "description": "A GitHub pull request and issue comment notifier for hubot",
-  "version": "0.0.3",
-  "author": "yujiosaka <yuji.i@doboken.net>",
+  "name": "hubot-github-mention-notifier",
+  "description": "A GitHub pull request and issue comment notifier for hubot. Original project is created by yujiosaka.",
+  "version": "0.0.1",
+  "author": "Fumiya Nakamura <nakamurafumiya003@gmail.com>",
   "license": "MIT",
   "keywords": [
     "hubot",
@@ -12,10 +12,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/yujiosaka/hubot-github-comment-notifier.git"
+    "url": "git://github.com/nafu/hubot-github-comment-notifier.git"
   },
   "bugs": {
-    "url": "https://github.com/yujiosaka/hubot-github-comment-notifier/issues"
+    "url": "https://github.com/nafu/hubot-github-comment-notifier/issues"
   },
   "dependencies": {
     "underscore": "^1.7.0"
