@@ -50,7 +50,7 @@ extractMentionsFromBody = (data) ->
     mentions = lib.extractMentions data.pull_request.body
   # when review comment is added to pull request
   else if data.action is 'created' and data.pull_request
-    mentions = lib.extractMentions data.pull_request.body
+    mentions = lib.extractMentions data.comment.body
   # comments on issues and those on pull requests are same except the latter has data.issue.pull_request
   else if data.action is 'created' and data.issue?.pull_request
     mentions = lib.extractMentions data.comment.body
