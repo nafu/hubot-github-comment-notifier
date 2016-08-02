@@ -19,6 +19,7 @@ lib = require '../lib'
 
 PATH = "/hubot/github-pull-request"
 
+base_room_name = process.env.BASE_ROOM_NAME
 
 module.exports = (robot) ->
   robot.router.post PATH, (req, res) ->
@@ -29,8 +30,31 @@ module.exports = (robot) ->
       mention_team: query["mention-team"]
     parts = parseBody req.body
     message = lib.buildMessage parts, opts
-    robot.send {room: query.room}, message if message
+    return res.end "" unless message
+
+    mentions = extractMentionsFromBody req.body
+    for mention in mentions
+      break unless base_room_name
+      room_name = base_room_name + mention.substring(1, mention.length)
+      try robot.send {room: room_name}, message
+    robot.send {room: query.room}, message
     res.end ""
+
+extractMentionsFromBody = (data) ->
+  mentions = null
+  # when pull request is opened
+  if ['opened', 'reopened'].indexOf(data.action) > -1 and data.pull_request
+    mentions = lib.extractMentions data.pull_request.body
+  # when pull request is closed
+  else if data.action is 'closed' and data.pull_request
+    mentions = lib.extractMentions data.pull_request.body
+  # when review comment is added to pull request
+  else if data.action is 'created' and data.pull_request
+    mentions = lib.extractMentions data.pull_request.body
+  # comments on issues and those on pull requests are same except the latter has data.issue.pull_request
+  else if data.action is 'created' and data.issue?.pull_request
+    mentions = lib.extractMentions data.comment.body
+  mentions
 
 parseBody = (data) ->
   parts = null
